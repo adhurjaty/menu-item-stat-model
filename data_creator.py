@@ -50,9 +50,8 @@ def generate_usages(food_matrix):
     in_mat = food_matrix.to_matrix()
     out_mat = np.apply_along_axis(random_ingredients, 1, in_mat)
     order_amounts = out_mat[:, 0]
-    ingredient_amounts = out_mat[:, 1:]
-    return (order_amounts, OrderMatrix.from_mat(ingredient_amounts, food_matrix.columns, 
-        food_matrix.get_ordered_names()))
+    ingredient_amounts = np.apply_along_axis(np.sum, 0, out_mat[:, 1:])
+    return (order_amounts, ingredient_amounts)
 
 def create_food_matrix(filename):
     with open(filename, 'r') as f:
