@@ -3,6 +3,7 @@ import random
 
 class OrderMatrix(object):
     columns = []
+    row_names = []
     records = {}
 
     @staticmethod
@@ -25,12 +26,10 @@ class OrderMatrix(object):
 
     def add_record(self, name, values):
         self.records[name] = list(map(float, values))
+        self.row_names.append(name)
 
     def get_ordered_rows(self):
-        return [(key, self.records[key]) for key in sorted(self.records.keys())]
-
-    def get_ordered_names(self):
-        return sorted(self.records.keys())
+        return [(key, self.records[key]) for key in self.row_names]
 
     def to_matrix(self):
         mat = [row[:] for _, row in self.get_ordered_rows()]
@@ -43,7 +42,8 @@ def random_usage(mean):
 
 def random_ingredients(ingredients):
     amount = random.randint(0, 10)
-    return np.array([amount] + list(map(lambda el: random_usage(el) * amount, ingredients)))
+    return np.array([amount] + list(map(lambda el: \
+        sum(random_usage(el) for _ in range(amount)), ingredients)))
 
 
 def generate_usages(food_matrix):
